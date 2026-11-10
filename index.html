@@ -134,13 +134,19 @@
         <div class="p-4 bg-white border-b flex justify-between items-center">
             <div class="flex items-center space-x-2 text-sm text-gray-600">
                 <i class="fas fa-star text-yellow-400"></i>
-                <span class="font-bold text-gray-800">4.9</span>
+                <span class="font-bold text-gray-800">5.0</span>
                 <span>(1k+ rating)</span>
             </div>
             <div class="flex items-center space-x-2 text-sm text-gray-600">
                 <i class="fas fa-clock text-gray-400"></i>
                 <span>15-30 min</span>
             </div>
+        </div>
+
+        <!-- Halal Certification -->
+        <div class="px-4 py-2.5 bg-green-50 border-b border-green-100 flex items-center gap-3">
+            <img src="images/logo-halal.png" alt="Logo Halal Indonesia" class="w-10 h-10 object-contain bg-white rounded-lg p-0.5 shadow-sm shrink-0">
+            <p class="text-[11px] leading-snug text-green-900"><span class="font-bold"><i class="fas fa-check-circle text-green-600 mr-1"></i>Tersertifikasi Halal</span> oleh BPJPH (Badan Penyelenggara Jaminan Produk Halal) Kementerian Agama RI</p>
         </div>
 
         <!-- Testimonial Section -->
@@ -410,11 +416,11 @@
             { id: 'mixmd-per', name: 'Mix Mentai Cheese & Delight (Personal 6 pcs)', price: 35000, desc: 'Dimsum Mentai di mix dengan toping cheese dan cheese delight.', category: 'mix', image: 'images/mixmd-per.jpg' },
             { id: 'mixall-fam', name: 'Mix All Topping (Family 16 pcs)', price: 100000, desc: 'Dimsum Mentai mix toping cheese, cheese delight & mozzarella.', category: 'mix all', image: 'images/mixall-fam.jpg' },
             { id: 'mixall-per', name: 'Mix All Topping (Personal 6 pcs)', price: 40000, desc: 'Dimsum Mentai mix toping cheese, cheese delight & mozzarella.', category: 'mix all', image: 'images/mixall-per.jpg' },
-            { id: 'grg-ori', name: 'Dimsum Goreng Keju Lumer (Ori) 3/pack', price: 30000, desc: 'Isi 3 pcs per pack', category: 'goreng', image: 'images/grg-ori.jpg' },
-            { id: 'grg-mentai', name: 'Dimsum Goreng Keju Lumer (Mentai) 3/pack', price: 35000, desc: 'Isi 3 pcs per pack', category: 'goreng', image: 'images/grg-mentai.jpg' },
+            { id: 'grg-ori', name: 'Dimsum Goreng Keju Lumer (Ori) 3/pack', price: 30000, desc: 'Isi 3 pcs per pack', category: 'goreng', image: 'images/grg-ori.jpg', soldOut: true },
+            { id: 'grg-mentai', name: 'Dimsum Goreng Keju Lumer (Mentai) 3/pack', price: 35000, desc: 'Isi 3 pcs per pack', category: 'goreng', image: 'images/grg-mentai.jpg', soldOut: true },
             { id: 'cust-per', name: 'Dimsum Personal Custom', price: 45000, desc: 'Dimsum custom ukuran personal', category: 'custom', image: 'images/cust-per.jpg' },
-            { id: 'cust-fam1', name: 'Dimsum Family Custom (Ied Adha)', price: 115000, desc: 'Dimsum custom ukuran family pack edisi spesial', category: 'custom', image: 'images/cust-fam1.jpg' },
-            { id: 'cust-fam2', name: 'Dimsum Family Custom (Reuni)', price: 120000, desc: 'Dimsum custom ukuran family pack edisi spesial', category: 'custom', image: 'images/cust-fam2.jpg' }
+            { id: 'cust-fam1', name: 'Dimsum Family Custom (Request Tulisan)', price: 115000, desc: 'Dimsum custom ukuran family pack, tulisan sesuai request', category: 'custom', image: 'images/cust-fam1.jpg' },
+            { id: 'cust-fam2', name: 'Dimsum Family Custom with Cheese (Request Tulisan)', price: 120000, desc: 'Dimsum custom ukuran family pack dengan topping cheese, tulisan sesuai request', category: 'custom', image: 'images/cust-fam2.jpg' }
         ];
 
         let cart = {};
@@ -447,8 +453,9 @@
                     : `<div class="w-full h-full bg-[#fce7e7] flex items-center justify-center text-center text-[0.75rem] text-[#b91c1c] p-2">[Image of ${product.name}]</div>`;
 
                 itemDiv.innerHTML = `
-                    <div class="w-28 h-[94px] flex-shrink-0 rounded-lg overflow-hidden shadow-sm border border-gray-100 bg-[#c70e0e]">
+                    <div class="relative w-28 h-[94px] flex-shrink-0 rounded-lg overflow-hidden shadow-sm border border-gray-100 bg-[#c70e0e]${product.soldOut ? ' grayscale opacity-70' : ''}">
                         ${imageHtml}
+                        ${product.soldOut ? '<span class="absolute inset-0 flex items-center justify-center pointer-events-none"><span class="bg-gray-900/80 text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded">SOLD OUT</span></span>' : ''}
                     </div>
                     <div class="flex-1 flex flex-col justify-between">
                         <div>
@@ -459,6 +466,9 @@
                         <div class="flex justify-between items-end mt-2">
                             <span class="font-bold text-gray-900 text-sm">${formatRp(product.price)}</span>
                             
+                            ${product.soldOut ? `
+                                <span class="text-[11px] font-bold text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full"><i class="fas fa-ban mr-1"></i>Sold Out</span>
+                            ` : `
                             <div class="flex items-center space-x-2">
                                 ${qty > 0 ? `
                                     <button onclick="updateCart('${product.id}', -1)" class="w-6 h-6 rounded-full border border-brand text-brand flex items-center justify-center hover:bg-red-50">
@@ -470,6 +480,7 @@
                                     <i class="fas fa-plus text-xs"></i>
                                 </button>
                             </div>
+                            `}
                         </div>
                     </div>
                 `;
@@ -481,6 +492,7 @@
         function updateCart(productId, change) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
+            if (product.soldOut && change > 0) return; // menu sold out tidak bisa ditambahkan ke keranjang
 
             if (!cart[productId]) {
                 cart[productId] = { ...product, qty: 0 };
@@ -870,51 +882,51 @@
         // unggulan: true = tampil di baris depan; sisanya ada di "Lihat Semua Testimoni"
         const UP = 'images/';
         const TESTIMONI_ASLI = [
-            { sumber: 'ig', nama: '_nesya.ya', rating: 5, ulasan: "Maa syaa allah tabarakallah, dimsum terenak yang pernah aku makan di Makassar, rate dari aku 1000/10 🤩\nPesannya di kak @raihaanahr 😍", foto: UP + 'ig-15.jpg', unggulan: true },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Mau kasi testiii... Semalam rebutan sama saudara karena ini dimsum terenak yang pernah kami beli, MaasyaaAllah... Apalagi chili oilnya.. d best.... Sukses terus dan larisss selaluu umyahhh 🤞\n\nDefinisi dimsum premium. Porsinya mantap, mentainya melimpah, dan teksturnya juara. Apalg ada di chili oil-nya yang punya rasa otentik dan bikin ketagihan. Quality and taste are top notch 🤞 super nagih dimsumnya. 100/10 must try!", foto: UP + 'testi-08.jpg', unggulan: true },
-            { sumber: 'ig', nama: 'mftymwd', rating: 5, ulasan: "Maa syaa allah, finally order dimsum ummyah 🥰🫶\nKulit dimsumnya lembut & tipis, isiannya padat melimpah ✨😋\nNext bakal order lagi, in syaa allah 😍💖", foto: UP + 'ig-18.jpg', unggulan: true },
-            { sumber: 'ig', nama: 'nurhidayahisna2', rating: 5, ulasan: "First time makan ginian, takut gak cocok di lidah. Daan.. maa Syaa Allah, Wenakk.. Kurangnya satu aja, kurang banyak belinya. 😆\nBelinya di kak Rain Umma Yahya", foto: UP + 'ig-16.jpg', unggulan: true },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "MasyaaAllah sukaa dan enak enakk skali dimsumntaa, aplgi chili oilnyaa juara mmng ⭐⭐⭐⭐⭐ beda skli sm dimsum yg pernah ku cba, ndd kalah pokonya masyaaAllah. Packagingnya jga steril dan aman skali 😍👍🤤🤤", foto: UP + 'testi-04.jpg', unggulan: true },
-            { sumber: 'ig', nama: 'nptriinabilaa', rating: 5, ulasan: "10/10 sih 😍 Ma sya Allah dimsum terenak sih yg ini, selama ini susah cri yang enak dan harga nya terjangkau skli 🥰🤍\nJangan lupa kalau mau ki pesan bisa DM ig nya kak @raihaanahr", foto: UP + 'ig-20.jpg', unggulan: true },
-            { sumber: 'ig', nama: 'faathimahsandi_', rating: 5, ulasan: "Dimsum umyah mendarat dengan nikmat di Madinah 🥹🤍\nJazaakillahu khayran kak @raihaanahr, maap baru upload, hp nya baru nyala 🙏😅", foto: UP + 'ig-14.jpg', unggulan: true },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Kaakk, dimsumta sampai di kampungku. Masya Allah hampir 24 jam perjalanan dan masih enak rasanya.\nDimsum gorengnya kugoreng lagi biar tambah garing dan hangat2 krn lamami dijalan, enak sekali kak, kejunya juga lumer, tadi subuh kumakan sahur dan masih enak.\nDimsum gorengta lewatmi 24 jam, pdhal ndk dikulkas ji kusimpan pas sampe rumah. Sahurpi tdi baru habis. Dan ternyata sebesar itu dimsum gorengta, masya Allah 😍", foto: UP + 'testi-11.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'zahrah.nb', rating: 5, ulasan: "Kalo ke Makassar, belinya disini @ummyah.dimsum", foto: UP + 'ig-32.jpg', unggulan: true },
             { sumber: 'ig', nama: 'dwinurskd', rating: 5, ulasan: "Mentai cheese, besttt 🫶\nOrdernya di sini @raihaanahr ✨", foto: UP + 'ig-21.jpg', unggulan: true },
-            { sumber: 'ig', nama: 'machaalattvee', rating: 5, ulasan: "Enak skali!! Dimsumnya meaty, chili oilnya jg enak.. overall trasa skali premiumnyaaa 😋🫶\n— Dimsum Mentai Cheese", foto: UP + 'ig-25.jpg', unggulan: true },
-            { sumber: 'ig', nama: 'fatimahacca', rating: 5, ulasan: "Nemenin aktivitas ngedit ku di weekend ini, kalo lagi mumet.. makan ini auto happy lagii 🤏❤️\nJazakillahu khairan ustazaah @raihaanahr 🫶", foto: UP + 'ig-26.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Makasiii kakk, baru saya coba dimsum taa enakk sekaliiii. Isinya padat dan toppingnya melimpahki, chili oilnya jugaa enaakkkk skliii 🤩🤍", foto: UP + 'testi-13.jpg' },
-            { sumber: 'ig', nama: 'fildzahnblh', rating: 5, ulasan: "Best dimsum in town. 100/10 💯⭐ @ummyah.dimsum", foto: UP + 'ig-36.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Kakk terima kasihh, Masya Allah enakk sekalii dimsumnyaa, saus mentainya jugaa eenaaakk sekaliii 🥹", foto: UP + 'testi-07.jpg' },
-            { sumber: 'ig', nama: 'muaffiqah_', rating: 5, ulasan: "Masyaa Allah endul tawwa. Lumer2 mentai sama cheesenya di mulut 🤤 @raihaanahr", foto: UP + 'ig-31.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Datang mi kak 📦\nMaa syaa Allah enaaaaaaaaaaaak, terbayarkan penungguan panjang 💖👌", foto: UP + 'testi-03.jpg' },
-            { sumber: 'ig', nama: 'nrainislmn', rating: 5, ulasan: "Mentai cheese delight & original 😍😍😍\nPesan Rabu, 22 Oktober 2025 – post Rabu, 5 November 2025 (setelah 2 pekan wkwk)\nOrder in @ummyah.dimsum", foto: UP + 'ig-33.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Syukran kak enak sekali dimsumnya, packagingnya jg bagus sekali, barakallah 🥰🙏", foto: UP + 'testi-12.jpg' },
-            { sumber: 'ig', nama: 'rima_andriani', rating: 5, ulasan: "Allahumma baarik lahum fii maa razaqtahum, waghfir lahum, warhamhum 🤲\nMaacih repot-repot dikirim malam-malam 💙 @ummyah.dimsum Enaaak ☺️☺️☺️", foto: UP + 'ig-42.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Sampaimii alhamdulillaah, syukroon yaah 🌹🌹\nMasyaAllah, enaakk sekaliii 😘😘\nBarakallahu fiik Ummyah dimsum.. Syukron telah membahagiakan perut ini 😂🤭😘😘😘", foto: UP + 'testi-05.jpg' },
-            { sumber: 'ig', nama: 'usepalsepil', rating: 5, ulasan: "Dimsum yg ke xxx pernah kucoba, ini juicy sekali 🙏🥹💞\nSyukron kk luphhh @ummyah.dimsum @raihaanahr", foto: UP + 'ig-46.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Sudah sampai kak, masyaallah enak sekali 🥹🫶", foto: UP + 'testi-09.jpg' },
-            { sumber: 'ig', nama: 'sitiwakiyah.s', rating: 5, ulasan: "Ayo jajan UMMYAH.DIMSUM! 10/10 ukuran dan rasanya super premium.\nBelajar boleh serius, tapi dimsum dulu biar fokus. 📚", foto: UP + 'ig-41.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Alhamdulillah sudah tiba kak, syukran, enak dan bersih as always 🥰🫶", foto: UP + 'testi-01.jpg' },
-            { sumber: 'ig', nama: 'aisyah_hidayatt14', rating: 5, ulasan: "@ummyah.dimsum 1000/10 💗", foto: UP + 'ig-24.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Makasihh kakk. Enakk sekalii. Beda dri yg lain. Whlist ku klw ke Mkssr pngn cba dimsum ta. Ndk sempt mi sy fto pas smpe lngsung di eksekusii 😄", foto: UP + 'testi-06.jpg' },
-            { sumber: 'ig', nama: 'dwinurskd', rating: 5, ulasan: "Selalu enakkk 😌🥹☺️ @ummyah.dimsum", foto: UP + 'ig-39.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Alhamdulillah na ***** semua orang 🥹🫶\nEnaknya.. MasyaAllah 🥹🥰", foto: UP + 'testi-10.jpg' },
-            { sumber: 'ig', nama: 'zhaifahzb', rating: 5, ulasan: "Masya Allah cemilan lezat malam ini @ummyah.dimsum ✨", foto: UP + 'ig-40.jpg' },
-            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Enakk sekalii dimsum nyaa 😻😻", foto: UP + 'testi-02.jpg' },
-            { sumber: 'ig', nama: 'zahratlljnnh_', rating: 5, ulasan: "Dimsumnya enak, recommended ❤️ 100/10 ⭐\nOrder disini @ummyah.dimsum", foto: UP + 'ig-44.jpg' },
-            { sumber: 'ig', nama: 'fatimah_nkhair', rating: 5, ulasan: "Fav musmid by @ummyah.dimsum 😋🫶", foto: UP + 'ig-17.jpg' },
-            { sumber: 'ig', nama: 'lutfiahfe', rating: 5, ulasan: "Jd saksi klo membujukka mau dimsumnya ustadzah sambil bisik2 tetangga, ehh dikasi dongg, rezeki nda kemana ges 🤭🫶\nButt must to try sih, sedaging itu 😋 @ummyah.dimsum", foto: UP + 'ig-45.jpg' },
-            { sumber: 'ig', nama: 'ainun_afiat21', rating: 5, ulasan: "Menu malam ini dimsum made by @ummyah.dimsum, ga pernah gagal soal rasa dan kualitas ✨", foto: UP + 'ig-34.jpg' },
-            { sumber: 'ig', nama: 'zahrah.nb', rating: 5, ulasan: "Kalo ke Makassar, belinya disini @ummyah.dimsum", foto: UP + 'ig-32.jpg' },
-            { sumber: 'ig', nama: 'naskaptr', rating: 5, ulasan: "Nge-dimsum @ummyah.dimsum 🥢", foto: UP + 'ig-35.jpg' },
-            { sumber: 'ig', nama: 'fatimahacca', rating: 5, ulasan: "✨ Bersama orang-orang hebatnya Erha 🧡\nDimsum custom “Cemilan sayang buat PI-KABIDAH tercinta”", foto: UP + 'ig-30.jpg' },
+            { sumber: 'ig', nama: 'dwinurskd', rating: 5, ulasan: "Selalu enakkk 😌🥹☺️ @ummyah.dimsum", foto: UP + 'ig-39.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'zahratlljnnh_', rating: 5, ulasan: "Dimsumnya enak, recommended ❤️ 100/10 ⭐\nOrder disini @ummyah.dimsum", foto: UP + 'ig-44.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'ainun_afiat21', rating: 5, ulasan: "Menu malam ini dimsum made by @ummyah.dimsum, ga pernah gagal soal rasa dan kualitas ✨", foto: UP + 'ig-34.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'fildzahnblh', rating: 5, ulasan: "Best dimsum in town. 100/10 💯⭐ @ummyah.dimsum", foto: UP + 'ig-36.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'mftymwd', rating: 5, ulasan: "Maa syaa allah, finally order dimsum ummyah 🥰🫶\nKulit dimsumnya lembut & tipis, isiannya padat melimpah ✨😋\nNext bakal order lagi, in syaa allah 😍💖", foto: UP + 'ig-18.jpg', unggulan: true },
+            { sumber: 'ig', nama: '_nesya.ya', rating: 5, ulasan: "Maa syaa allah tabarakallah, dimsum terenak yang pernah aku makan di Makassar, rate dari aku 1000/10 🤩\nPesannya di kak @raihaanahr 😍", foto: UP + 'ig-15.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'fatimahacca', rating: 5, ulasan: "Nemenin aktivitas ngedit ku di weekend ini, kalo lagi mumet.. makan ini auto happy lagii 🤏❤️\nJazakillahu khairan ustazaah @raihaanahr 🫶", foto: UP + 'ig-26.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'rima_andriani', rating: 5, ulasan: "Allahumma baarik lahum fii maa razaqtahum, waghfir lahum, warhamhum 🤲\nMaacih repot-repot dikirim malam-malam 💙 @ummyah.dimsum Enaaak ☺️☺️☺️", foto: UP + 'ig-42.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'fatimah_nkhair', rating: 5, ulasan: "Fav musmid by @ummyah.dimsum 😋🫶", foto: UP + 'ig-17.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'zhaifahzb', rating: 5, ulasan: "Masya Allah cemilan lezat malam ini @ummyah.dimsum ✨", foto: UP + 'ig-40.jpg', unggulan: true },
             { sumber: 'ig', nama: 'tiyaasyhrr', rating: 5, ulasan: "Dimsum terenakk by @ummyah.dimsum 🤤✨", foto: UP + 'ig-43.jpg' },
+            { sumber: 'ig', nama: 'nrainislmn', rating: 5, ulasan: "Mentai cheese delight & original 😍😍😍\nPesan Rabu, 22 Oktober 2025 – post Rabu, 5 November 2025 (setelah 2 pekan wkwk)\nOrder in @ummyah.dimsum", foto: UP + 'ig-33.jpg' },
+            { sumber: 'ig', nama: 'naskaptr', rating: 5, ulasan: "Nge-dimsum @ummyah.dimsum 🥢", foto: UP + 'ig-35.jpg' },
+            { sumber: 'ig', nama: 'nptriinabilaa', rating: 5, ulasan: "10/10 sih 😍 Ma sya Allah dimsum terenak sih yg ini, selama ini susah cri yang enak dan harga nya terjangkau skli 🥰🤍\nJangan lupa kalau mau ki pesan bisa DM ig nya kak @raihaanahr", foto: UP + 'ig-20.jpg' },
+            { sumber: 'ig', nama: 'machaalattvee', rating: 5, ulasan: "Enak skali!! Dimsumnya meaty, chili oilnya jg enak.. overall trasa skali premiumnyaaa 😋🫶\n— Dimsum Mentai Cheese", foto: UP + 'ig-25.jpg' },
+            { sumber: 'ig', nama: 'nurhidayahisna2', rating: 5, ulasan: "First time makan ginian, takut gak cocok di lidah. Daan.. maa Syaa Allah, Wenakk.. Kurangnya satu aja, kurang banyak belinya. 😆\nBelinya di kak Rain Umma Yahya", foto: UP + 'ig-16.jpg' },
+            { sumber: 'ig', nama: 'faathimahsandi_', rating: 5, ulasan: "Dimsum umyah mendarat dengan nikmat di Madinah 🥹🤍\nJazaakillahu khayran kak @raihaanahr, maap baru upload, hp nya baru nyala 🙏😅", foto: UP + 'ig-14.jpg' },
+            { sumber: 'ig', nama: 'muaffiqah_', rating: 5, ulasan: "Masyaa Allah endul tawwa. Lumer2 mentai sama cheesenya di mulut 🤤 @raihaanahr", foto: UP + 'ig-31.jpg' },
+            { sumber: 'ig', nama: 'aisyah_hidayatt14', rating: 5, ulasan: "@ummyah.dimsum 1000/10 💗", foto: UP + 'ig-24.jpg' },
+            { sumber: 'ig', nama: 'rayhaanah.b', rating: 5, ulasan: "@ummyah.dimsum @raihaanahr ❤️👌", foto: UP + 'ig-29.jpg' },
+            { sumber: 'ig', nama: 'sitiwakiyah.s', rating: 5, ulasan: "Ayo jajan UMMYAH.DIMSUM! 10/10 ukuran dan rasanya super premium.\nBelajar boleh serius, tapi dimsum dulu biar fokus. 📚", foto: UP + 'ig-41.jpg' },
+            { sumber: 'ig', nama: 'usepalsepil', rating: 5, ulasan: "Dimsum yg ke xxx pernah kucoba, ini juicy sekali 🙏🥹💞\nSyukron kk luphhh @ummyah.dimsum @raihaanahr", foto: UP + 'ig-46.jpg' },
+            { sumber: 'ig', nama: 'fatimahacca', rating: 5, ulasan: "✨ Bersama orang-orang hebatnya Erha 🧡\nDimsum custom “Cemilan sayang buat PI-KABIDAH tercinta”", foto: UP + 'ig-30.jpg' },
+            { sumber: 'ig', nama: 'lutfiahfe', rating: 5, ulasan: "Jd saksi klo membujukka mau dimsumnya ustadzah sambil bisik2 tetangga, ehh dikasi dongg, rezeki nda kemana ges 🤭🫶\nButt must to try sih, sedaging itu 😋 @ummyah.dimsum", foto: UP + 'ig-45.jpg' },
+            { sumber: 'ig', nama: 'khaulahramli__', rating: 5, ulasan: "Dimsum time 🥢 @ummyah.dimsum @raihaanahr", foto: UP + 'ig-22.jpg' },
             { sumber: 'ig', nama: 'nahdnursyam', rating: 5, ulasan: "Dimsum kesukaan sekeluarga, masyaaAllah si kecil pun doyan xixi @ummyah.dimsum barakallahufiik kak @raihaanahr ❤️\nAnak kecil tolong sabar dulu ksian 👈", foto: UP + 'ig-23.jpg' },
+            { sumber: 'ig', nama: 'nadyanrazzh', rating: 5, ulasan: "Repeat order lagi @ummyah.dimsum @raihaanahr 🫶", foto: UP + 'ig-28.jpg' },
             { sumber: 'ig', nama: 'astrid_hrmwan', rating: 5, ulasan: "Dimsumnya pakai tobiko jadi beda dri dimsum yg lain 😍\nBeli di @ummyah.dimsum", foto: UP + 'ig-27.jpg' },
             { sumber: 'ig', nama: 'astrid_hrmwan', rating: 5, ulasan: "Semangat kerja proposalnya, full support... 😍✨ @ummyah.dimsum", foto: UP + 'ig-37.jpg' },
-            { sumber: 'ig', nama: 'khaulahramli__', rating: 5, ulasan: "Dimsum time 🥢 @ummyah.dimsum @raihaanahr", foto: UP + 'ig-22.jpg' },
             { sumber: 'ig', nama: 'hayaswr', rating: 5, ulasan: "Dimsum enak 🥢🥰 by @raihaanahr", foto: UP + 'ig-19.jpg' },
-            { sumber: 'ig', nama: 'nadyanrazzh', rating: 5, ulasan: "Repeat order lagi @ummyah.dimsum @raihaanahr 🫶", foto: UP + 'ig-28.jpg' },
-            { sumber: 'ig', nama: 'rayhaanah.b', rating: 5, ulasan: "@ummyah.dimsum @raihaanahr ❤️👌", foto: UP + 'ig-29.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Mau kasi testiii... Semalam rebutan sama saudara karena ini dimsum terenak yang pernah kami beli, MaasyaaAllah... Apalagi chili oilnya.. d best.... Sukses terus dan larisss selaluu umyahhh 🤞\n\nDefinisi dimsum premium. Porsinya mantap, mentainya melimpah, dan teksturnya juara. Apalg ada di chili oil-nya yang punya rasa otentik dan bikin ketagihan. Quality and taste are top notch 🤞 super nagih dimsumnya. 100/10 must try!", foto: UP + 'testi-08.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "MasyaaAllah sukaa dan enak enakk skali dimsumntaa, aplgi chili oilnyaa juara mmng ⭐⭐⭐⭐⭐ beda skli sm dimsum yg pernah ku cba, ndd kalah pokonya masyaaAllah. Packagingnya jga steril dan aman skali 😍👍🤤🤤", foto: UP + 'testi-04.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Kaakk, dimsumta sampai di kampungku. Masya Allah hampir 24 jam perjalanan dan masih enak rasanya.\nDimsum gorengnya kugoreng lagi biar tambah garing dan hangat2 krn lamami dijalan, enak sekali kak, kejunya juga lumer, tadi subuh kumakan sahur dan masih enak.\nDimsum gorengta lewatmi 24 jam, pdhal ndk dikulkas ji kusimpan pas sampe rumah. Sahurpi tdi baru habis. Dan ternyata sebesar itu dimsum gorengta, masya Allah 😍", foto: UP + 'testi-11.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Datang mi kak 📦\nMaa syaa Allah enaaaaaaaaaaaak, terbayarkan penungguan panjang 💖👌", foto: UP + 'testi-03.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Sudah sampai kak, masyaallah enak sekali 🥹🫶", foto: UP + 'testi-09.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Makasiii kakk, baru saya coba dimsum taa enakk sekaliiii. Isinya padat dan toppingnya melimpahki, chili oilnya jugaa enaakkkk skliii 🤩🤍", foto: UP + 'testi-13.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Kakk terima kasihh, Masya Allah enakk sekalii dimsumnyaa, saus mentainya jugaa eenaaakk sekaliii 🥹", foto: UP + 'testi-07.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Syukran kak enak sekali dimsumnya, packagingnya jg bagus sekali, barakallah 🥰🙏", foto: UP + 'testi-12.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Sampaimii alhamdulillaah, syukroon yaah 🌹🌹\nMasyaAllah, enaakk sekaliii 😘😘\nBarakallahu fiik Ummyah dimsum.. Syukron telah membahagiakan perut ini 😂🤭😘😘😘", foto: UP + 'testi-05.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Alhamdulillah sudah tiba kak, syukran, enak dan bersih as always 🥰🫶", foto: UP + 'testi-01.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Makasihh kakk. Enakk sekalii. Beda dri yg lain. Whlist ku klw ke Mkssr pngn cba dimsum ta. Ndk sempt mi sy fto pas smpe lngsung di eksekusii 😄", foto: UP + 'testi-06.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Alhamdulillah na ***** semua orang 🥹🫶\nEnaknya.. MasyaAllah 🥹🥰", foto: UP + 'testi-10.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Enakk sekalii dimsum nyaa 😻😻", foto: UP + 'testi-02.jpg' },
             { sumber: 'ig', nama: 'amirullahsyaifuddin_asy', rating: 5, ulasan: "Alhamdulillah silaturahmi 😊 disponsori oleh @ummyah.dimsum", foto: UP + 'ig-38.jpg' },
         ];
 
