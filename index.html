@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ummyah Dimsum</title>
+    <meta name="description" content="Ummyah Dimsum â€“ Premium Dimsum Mentai, Halal dan Lezat. Pesan online: Original, Mentai, Mentai Cheese, Delight, Mozzarella, Mix, Goreng Keju Lumer & Custom. BTN. Pao-Pao Permai, Gowa.">
+    <meta name="theme-color" content="#c70e0e">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="apple-touch-icon" href="images/favicon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ummyah Dimsum â€“ Premium Dimsum Mentai, Halal dan Lezat">
+    <meta property="og:description" content="Pesan dimsum mentai premium Ummyah Dimsum secara online. Halal, lezat, dan dipercaya ratusan pelanggan.">
+    <meta property="og:image" content="/images/logo-ummyah.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2canvas for Receipt Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        /* App Container mimicking mobile screen */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow-x: hidden;
+            padding-bottom: 80px; /* space for bottom cart */
+        }
+
+        /* Custom Scrollbar for the app */
+        .app-container::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        /* GoFood-like Red */
+        .bg-brand { background-color: #E2211C; }
+        .text-brand { color: #E2211C; }
+        .border-brand { border-color: #E2211C; }
+
+        /* Receipt Style */
+        .receipt-paper {
+            font-family: 'Courier New', Courier, monospace;
+            background: #fff;
+            padding: 20px;
+            border: 1px dashed #ccc;
+            color: #000;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        /* Floating WA */
+        .floating-wa {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: transform 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .floating-wa:hover {
+            transform: scale(1.1);
+        }
+
+        /* Image Placeholder */
+        .img-placeholder {
+            background-color: #fce7e7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #b91c1c;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+        }
+
+        /* Hide Scrollbar for Horizontal Scroll */
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Hide elements utility */
+        .hidden-modal { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="main-app">
+        
+        <!-- Header -->
+        <header class="bg-brand text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-start">
+            <div class="flex items-start">
+                <img src="images/logo-ummyah.png" alt="Logo Ummyah Dimsum" class="w-[68px] h-[68px] rounded-full mr-3 ring-2 ring-white shadow-lg object-cover shrink-0">
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Ummyah Dimsum</h1>
+                    <p class="text-xs opacity-90 mt-0.5">Premium Dimsum Mentai, Halal dan Lezat</p>
+                    <p class="text-[10px] opacity-90 mt-1 leading-tight"><i class="fas fa-map-marker-alt mr-1"></i>BTN. Pao-Pao Permai Blok E2/15,<br>Paccinongang, Somba Opu, Gowa.</p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center ml-2 shrink-0">
+                <div class="bg-white rounded-xl p-1 shadow w-14 h-14 flex items-center justify-center"><img src="images/logo-halal.png" alt="Logo Halal Indonesia" class="w-full h-full object-contain"></div>
+            </div>
+        </header>
+
+        <!-- Restaurant Info -->
+        <div class="p-4 bg-white border-b flex justify-between items-center">
+            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                <i class="fas fa-star text-yellow-400"></i>
+                <span class="font-bold text-gray-800">4.9</span>
+                <span>(1k+ rating)</span>
+            </div>
+            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                <i class="fas fa-clock text-gray-400"></i>
+                <span>15-30 min</span>
+            </div>
+        </div>
+
+        <!-- Testimonial Section -->
+        <div class="p-4 mb-4 bg-gray-50 border-t">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold"><i class="fas fa-star text-yellow-400 mr-2"></i>Testimoni Pelanggan</h2>
+                <button onclick="openTestimoniModal()" class="text-xs font-bold text-brand border border-brand px-3 py-1.5 rounded-full hover:bg-brand hover:text-white transition"><i class="fas fa-pen mr-1"></i>Tulis Ulasan</button>
+            </div>
+            
+            <!-- Horizontal Scroll Area for Testimonials -->
+            <div class="relative">
+                <div id="testimonial-list" class="flex flex-nowrap overflow-x-auto pb-2 gap-3 hide-scroll snap-x snap-mandatory scroll-smooth"></div>
+                <button id="testi-prev" onclick="scrollTestimoni(-1)" aria-label="Geser ke kiri" class="hidden absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 text-brand flex items-center justify-center hover:bg-red-50"><i class="fas fa-chevron-left"></i></button>
+                <button id="testi-next" onclick="scrollTestimoni(1)" aria-label="Geser ke kanan" class="absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-brand text-white shadow-lg flex items-center justify-center hover:opacity-90"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="flex justify-end mt-3">
+                <button onclick="openSemuaTestimoni()" class="text-sm font-semibold text-brand flex items-center gap-2 hover:underline"><span>Lihat Semua Testimoni (<span id="testi-count">0</span>)</span><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <main class="p-4" id="menu-container">
+            <h2 class="text-lg font-bold mb-4 border-b pb-2"><i class="fas fa-utensils text-brand mr-2"></i>Menu Pilihan</h2>
+            <div id="product-list" class="space-y-6">
+                <!-- Products will be injected here by JS -->
+            </div>
+        </main>
+
+
+
+        <!-- Bottom Cart Bar -->
+        <div id="cart-bar" class="fixed bottom-0 w-full max-w-[480px] bg-white border-t p-3 hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40">
+            <div class="bg-brand text-white rounded-lg p-3 flex justify-between items-center cursor-pointer shadow-lg" onclick="openCheckout()">
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold" id="cart-qty-total"><i class="fas fa-shopping-basket mr-2"></i>0 Item</span>
+                    <span class="text-xs opacity-80" id="cart-price-total">Rp 0</span>
+                </div>
+                <div class="font-bold flex items-center">
+                    Checkout <i class="fas fa-chevron-right ml-2 text-sm"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Modal -->
+        <div id="checkout-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden-modal flex justify-center items-end sm:items-center">
+            <div class="bg-white w-full max-w-[480px] h-[90vh] sm:h-auto sm:max-h-[90vh] rounded-t-2xl sm:rounded-2xl flex flex-col overflow-hidden animate-slide-up">
+                <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+                    <h3 class="font-bold text-lg"><i class="fas fa-clipboard-list text-brand mr-2"></i>Detail Pesanan</h3>
+                    <button onclick="closeCheckout()" class="text-gray-500 hover:text-red-500 text-xl"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="p-4 flex-1 overflow-y-auto">
+                    <!-- Order Items Summary -->
+                    <div id="checkout-items" class="mb-4 space-y-3"></div>
+                    
+                    <div id="checkout-discount-container"></div>
+
+                    <div class="border-t pt-4 mb-6 flex justify-between font-bold text-lg">
+                        <span>Total:</span>
+                        <span id="checkout-total-price" class="text-brand">Rp 0</span>
+                    </div>
+
+                    <!-- Customer Form -->
+                    <h4 class="font-bold mb-3"><i class="fas fa-user text-gray-400 mr-2"></i>Informasi Pengiriman</h4>
+                    <form id="order-form" onsubmit="processOrder(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Pemesan</label>
+                            <input type="text" id="cust-name" required class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Masukkan nama Anda">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Nomor WhatsApp</label>
+                            <input type="tel" id="cust-wa" required class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Contoh: 08123456789">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Alamat Lengkap</label>
+                            <textarea id="cust-address" required rows="2" class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Detail alamat pengiriman"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Catatan Tambahan (Opsional)</label>
+                            <textarea id="cust-notes" rows="2" class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Contoh: Pedas, sumpit lebih, dll"></textarea>
+                        </div>
+                        
+                        <!-- Waktu Pengiriman Section -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Waktu Pengiriman</label>
+                            <select id="cust-delivery-time" onchange="toggleScheduledTime()" required class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand bg-white text-gray-700">
+                                <option value="now" selected>Sekarang Juga</option>
+                                <option value="scheduled">Pilih Tanggal & Waktu</option>
+                            </select>
+                            <div id="scheduled-time-container" class="hidden mt-2">
+                                <input type="datetime-local" id="cust-scheduled-time" class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand" title="Pilih Tanggal dan Waktu">
+                            </div>
+                        </div>
+
+                        <!-- Voucher Section -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Kode Voucher (Opsional)</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="cust-voucher" class="w-full border rounded-lg p-2.5 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Masukkan kode voucher">
+                                <button type="button" onclick="applyVoucher()" class="bg-gray-800 text-white px-4 rounded-lg text-sm font-bold hover:bg-gray-700 transition">Terapkan</button>
+                            </div>
+                            <p id="voucher-msg" class="text-xs mt-1 hidden"></p>
+                        </div>
+
+                        <!-- Delivery Selection -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Metode Pengiriman</label>
+                            <select id="cust-delivery" required class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand bg-white text-gray-700">
+                                <option value="" disabled selected>Pilih Metode Pengiriman</option>
+                                <option value="Ambil Sendiri di Outlet">Ambil Sendiri di Outlet</option>
+                                <option value="Kurir Instant - Grab">Kurir Instant - Grab</option>
+                                <option value="Kurir Instant - Gojek">Kurir Instant - Gojek</option>
+                                <option value="Kurir Instant - Maxim">Kurir Instant - Maxim</option>
+                                <option value="Kurir Instant - Shopee">Kurir Instant - Shopee</option>
+                                <option value="Saya pesan kurir sendiri">Saya pesan kurir sendiri</option>
+                            </select>
+                            <p class="text-[10.5px] text-brand mt-1.5 italic font-semibold"><i class="fas fa-info-circle mr-1"></i>Catatan: Konfirmasi Biaya Ongkir di Whatsapp</p>
+                        </div>
+                    </form>
+                </div>
+                <div class="p-4 border-t bg-white">
+                    <button onclick="document.getElementById('order-form').requestSubmit()" class="w-full bg-brand text-white font-bold py-3 rounded-lg shadow-lg hover:bg-red-700 transition"><i class="fas fa-paper-plane mr-2"></i>Buat Pesanan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Receipt Modal -->
+        <div id="receipt-modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 z-[60] hidden-modal flex justify-center items-center p-4">
+            <div class="bg-white rounded-xl w-full max-w-[400px] overflow-hidden flex flex-col max-h-screen">
+                <div class="p-4 border-b flex justify-between items-center bg-gray-100">
+                    <h3 class="font-bold text-gray-800"><i class="fas fa-receipt text-gray-500 mr-2"></i>Resi Pembelian</h3>
+                    <button onclick="closeReceipt()" class="text-gray-500 hover:text-red-500 text-xl"><i class="fas fa-times"></i></button>
+                </div>
+                
+                <!-- Printable Area -->
+                <div class="overflow-y-auto p-4 bg-gray-100 flex justify-center">
+                    <div id="receipt-content" class="receipt-paper text-sm">
+                        <!-- Receipt content injected by JS -->
+                    </div>
+                </div>
+
+                <div class="p-4 bg-white border-t space-y-3">
+                    <button onclick="downloadReceipt()" class="w-full border-2 border-brand text-brand font-bold py-2 rounded-lg hover:bg-red-50 transition">
+                        <i class="fas fa-download mr-2"></i>Download Resi
+                    </button>
+                    <button onclick="sendWhatsApp()" class="w-full bg-[#25D366] text-white font-bold py-3 rounded-lg shadow hover:bg-green-600 transition">
+                        <i class="fab fa-whatsapp mr-2 text-lg"></i>Kirim ke WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Floating WA Widget Area-->
+    <button onclick="openWaModal()" class="floating-wa" title="Hubungi Kami via WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </button>
+
+    <!-- WA Modal -->
+    <div id="wa-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-[70] hidden-modal flex justify-center items-center p-4">
+        <div class="bg-white rounded-xl w-full max-w-[350px] overflow-hidden flex flex-col">
+            <div class="bg-[#25D366] p-4 text-white flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fab fa-whatsapp text-2xl mr-2"></i>
+                    <h3 class="font-bold">Chat WhatsApp</h3>
+                </div>
+                <button onclick="closeWaModal()" class="text-white hover:text-gray-200"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="p-4">
+                <p class="text-sm text-gray-600 mb-3">Ada pertanyaan? Silakan tulis pesan Anda di bawah ini:</p>
+                <textarea id="wa-message" rows="4" class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#25D366]" placeholder="Halo Ummyah Dimsum, saya mau bertanya..."></textarea>
+            </div>
+            <div class="p-4 border-t bg-gray-50">
+                <button onclick="sendDirectWa()" class="w-full bg-[#25D366] text-white font-bold py-2 rounded-lg shadow hover:bg-green-600 transition"><i class="fas fa-paper-plane mr-2"></i>Kirim Pesan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-80 z-[100] hidden-modal flex justify-center items-center p-4" onclick="closeImageModal()">
+        <button type="button" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white text-3xl hover:text-gray-300 z-[110] focus:outline-none">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="relative w-full max-w-lg flex flex-col items-center" onclick="event.stopPropagation()">
+            <img id="preview-image" src="" alt="Preview" class="w-full max-h-[80vh] object-contain rounded-lg shadow-2xl">
+            <p id="preview-title" class="text-white mt-4 text-center font-medium text-lg px-4"></p>
+        </div>
+    </div>
+
+    <!-- Semua Testimoni Modal -->
+    <div id="semua-testimoni-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-[85] hidden-modal flex justify-center items-end sm:items-center" onclick="if (event.target === this) closeSemuaTestimoni()">
+        <div class="bg-gray-50 w-full max-w-[480px] h-[92vh] rounded-t-2xl sm:rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="bg-white px-4 pt-4 pb-3 border-b">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-lg"><i class="fas fa-star text-yellow-400 mr-2"></i>Semua Testimoni</h3>
+                    <button onclick="closeSemuaTestimoni()" class="text-gray-500 hover:text-red-500" aria-label="Tutup"><i class="fas fa-times text-xl"></i></button>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Testimoni asli pelanggan dari WhatsApp &amp; Instagram</p>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button data-filter-testi="semua" onclick="setFilterTestimoni('semua')">Semua (<span id="testi-count-semua">0</span>)</button>
+                    <button data-filter-testi="wa" onclick="setFilterTestimoni('wa')"><i class="fab fa-whatsapp mr-1"></i>WhatsApp (<span id="testi-count-wa">0</span>)</button>
+                    <button data-filter-testi="ig" onclick="setFilterTestimoni('ig')"><i class="fab fa-instagram mr-1"></i>Instagram (<span id="testi-count-ig">0</span>)</button>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto p-3"><div id="semua-testimoni-grid" class="grid grid-cols-2 gap-3 items-start"></div></div>
+        </div>
+    </div>
+
+    <!-- Testimoni Modal -->
+    <div id="testimoni-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-[80] hidden-modal flex justify-center items-center p-4">
+        <div class="bg-white rounded-xl w-full max-w-[350px] overflow-hidden flex flex-col animate-slide-up">
+            <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+                <h3 class="font-bold text-gray-800"><i class="fas fa-comment-dots text-brand mr-2"></i>Tulis Ulasan Anda</h3>
+                <button onclick="closeTestimoniModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="testimoni-form" onsubmit="submitTestimoni(event)" class="p-4 space-y-4">
+                <div id="testi-error-msg" class="hidden text-xs text-red-600 bg-red-50 p-2 rounded text-center font-semibold"></div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Pemesan</label>
+                    <input type="text" id="testi-name" required class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Nama Anda (Boleh samaran)">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Beri Rating Bintang</label>
+                    <div class="flex space-x-2 text-3xl text-gray-200" id="star-rating-container">
+                        <i class="fas fa-star cursor-pointer hover:text-yellow-400 transition" onclick="setRating(1)"></i>
+                        <i class="fas fa-star cursor-pointer hover:text-yellow-400 transition" onclick="setRating(2)"></i>
+                        <i class="fas fa-star cursor-pointer hover:text-yellow-400 transition" onclick="setRating(3)"></i>
+                        <i class="fas fa-star cursor-pointer hover:text-yellow-400 transition" onclick="setRating(4)"></i>
+                        <i class="fas fa-star cursor-pointer hover:text-yellow-400 transition" onclick="setRating(5)"></i>
+                    </div>
+                    <input type="hidden" id="testi-rating" value="0" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Pendapat Anda</label>
+                    <textarea id="testi-desc" required rows="3" class="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Bagaimana rasa dimsum dan pelayanan kami?"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Upload Foto (Opsional)</label>
+                    <input type="file" id="testi-image" accept="image/*" onchange="previewTestiImage(event)" class="w-full border rounded-lg text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer">
+                    <div id="testi-img-preview-container" class="hidden mt-2 relative inline-block">
+                        <img id="testi-img-preview" src="" class="h-16 w-16 object-cover rounded-lg border border-gray-300">
+                        <button type="button" onclick="removeTestiImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-md"><i class="fas fa-times"></i></button>
+                    </div>
+                    <input type="hidden" id="testi-image-base64" value="">
+                </div>
+                <button type="submit" id="btn-submit-testi" class="w-full bg-brand text-white font-bold py-3 rounded-lg shadow-lg hover:bg-red-700 transition"><i class="fas fa-paper-plane mr-2"></i>Kirim Ulasan</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Data Produk dari Gambar
+        const products = [
+            { id: 'ori-fam', name: 'Dimsum Original (Family 16 pcs)', price: 80000, desc: 'Dimsum kukus dengan taburan nori.', category: 'original', image: 'images/ori-fam.jpg' },
+            { id: 'ori-per', name: 'Dimsum Original (Personal 6 pcs)', price: 27000, desc: 'Dimsum kukus dengan taburan nori.', category: 'original', image: 'images/ori-per-v2.jpg' },
+            { id: 'mentai-fam', name: 'Mentai (Family 16 pcs)', price: 85000, desc: 'Dimsum Mentai dengan taburan nori.', category: 'mentai', image: 'images/mentai-fam.jpg' },
+            { id: 'mentai-per', name: 'Mentai (Personal 6 pcs)', price: 30000, desc: 'Dimsum Mentai dengan taburan nori.', category: 'mentai', image: 'images/mentai-per.jpg' },
+            { id: 'mcheese-fam', name: 'Mentai Cheese (Family 16 pcs)', price: 95000, desc: 'Dimsum Mentai dengan topping cheese slice.', category: 'mentai cheese', badge: 'BEST SELLER', image: 'images/mcheese-fam.jpg' },
+            { id: 'mcheese-per', name: 'Mentai Cheese (Personal 6 pcs)', price: 35000, desc: 'Dimsum Mentai dengan topping cheese slice.', category: 'mentai cheese', badge: 'BEST SELLER', image: 'images/mcheese-per.jpg' },
+            { id: 'mcdelight-fam', name: 'Mentai Cheese Delight (Family 16 pcs)', price: 95000, desc: 'Dimsum Mentai dengan topping cheese red cheddar slice.', category: 'delight', image: 'images/mcdelight-fam.jpg' },
+            { id: 'mcdelight-per', name: 'Mentai Cheese Delight (Personal 6 pcs)', price: 35000, desc: 'Dimsum Mentai dengan topping cheese red cheddar slice.', category: 'delight', image: 'images/mcdelight-per.jpg' },
+            { id: 'mcmoz-fam', name: 'Mentai Cheese Mozarella (Family 16 pcs)', price: 105000, desc: 'Dimsum Mentai dengan topping keju mozarella.', category: 'mozarella', image: 'images/mcmoz-fam.jpg' },
+            { id: 'mcmoz-per', name: 'Mentai Cheese Mozarella (Personal 6 pcs)', price: 45000, desc: 'Dimsum Mentai dengan topping keju mozarella.', category: 'mozarella', image: 'images/mcmoz-per.jpg' },
+            { id: 'mixm-fam', name: 'Mix Mentai & Mentai Cheese (Family 16 pcs)', price: 90000, desc: 'Dimsum Mentai di mix dengan dimsum mentai topp cheese.', category: 'mix', image: 'images/mixm-fam.jpg' },
+            { id: 'mixm-per', name: 'Mix Mentai & Mentai Cheese (Personal 6 pcs)', price: 33000, desc: 'Dimsum Mentai di mix dengan dimsum mentai topp cheese.', category: 'mix', image: 'images/mixm-per.jpg' },
+            { id: 'mixmd-fam', name: 'Mix Mentai Cheese & Delight (Family 16 pcs)', price: 95000, desc: 'Dimsum Mentai di mix dengan toping cheese dan cheese delight.', category: 'mix', image: 'images/mixmd-fam.jpg' },
+            { id: 'mixmd-per', name: 'Mix Mentai Cheese & Delight (Personal 6 pcs)', price: 35000, desc: 'Dimsum Mentai di mix dengan toping cheese dan cheese delight.', category: 'mix', image: 'images/mixmd-per.jpg' },
+            { id: 'mixall-fam', name: 'Mix All Topping (Family 16 pcs)', price: 100000, desc: 'Dimsum Mentai mix toping cheese, cheese delight & mozzarella.', category: 'mix all', image: 'images/mixall-fam.jpg' },
+            { id: 'mixall-per', name: 'Mix All Topping (Personal 6 pcs)', price: 40000, desc: 'Dimsum Mentai mix toping cheese, cheese delight & mozzarella.', category: 'mix all', image: 'images/mixall-per.jpg' },
+            { id: 'grg-ori', name: 'Dimsum Goreng Keju Lumer (Ori) 3/pack', price: 30000, desc: 'Isi 3 pcs per pack', category: 'goreng', image: 'images/grg-ori.jpg' },
+            { id: 'grg-mentai', name: 'Dimsum Goreng Keju Lumer (Mentai) 3/pack', price: 35000, desc: 'Isi 3 pcs per pack', category: 'goreng', image: 'images/grg-mentai.jpg' },
+            { id: 'cust-per', name: 'Dimsum Personal Custom', price: 45000, desc: 'Dimsum custom ukuran personal', category: 'custom', image: 'images/cust-per.jpg' },
+            { id: 'cust-fam1', name: 'Dimsum Family Custom (Ied Adha)', price: 115000, desc: 'Dimsum custom ukuran family pack edisi spesial', category: 'custom', image: 'images/cust-fam1.jpg' },
+            { id: 'cust-fam2', name: 'Dimsum Family Custom (Reuni)', price: 120000, desc: 'Dimsum custom ukuran family pack edisi spesial', category: 'custom', image: 'images/cust-fam2.jpg' }
+        ];
+
+        let cart = {};
+        const ADMIN_WA = "6282348862250"; // Nomor WA tujuan
+        
+        let currentDiscount = 0;
+        let appliedVoucher = '';
+
+        // Format Rupiah
+        const formatRp = (angka) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        };
+
+        // Render Produk ke HTML
+        function renderProducts() {
+            const container = document.getElementById('product-list');
+            container.innerHTML = '';
+
+            products.forEach(product => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'flex gap-4 border-b pb-4 last:border-b-0';
+                
+                const qty = cart[product.id] ? cart[product.id].qty : 0;
+                
+                let badgeHtml = product.badge ? `<span class="bg-red-100 text-brand text-[10px] font-bold px-2 py-0.5 rounded uppercase mb-1 inline-block"><i class="fas fa-award mr-1"></i>${product.badge}</span>` : '';
+
+                // Memeriksa jika ada link gambar, jika tidak tampilkan placeholder teks biasa
+                let imageHtml = product.image && product.image.trim() !== '' 
+                    ? `<img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover cursor-pointer hover:opacity-80 transition" onclick="openImageModal('${product.id}')" title="Klik untuk memperbesar">` 
+                    : `<div class="w-full h-full bg-[#fce7e7] flex items-center justify-center text-center text-[0.75rem] text-[#b91c1c] p-2">[Image of ${product.name}]</div>`;
+
+                itemDiv.innerHTML = `
+                    <div class="w-28 h-[94px] flex-shrink-0 rounded-lg overflow-hidden shadow-sm border border-gray-100 bg-[#c70e0e]">
+                        ${imageHtml}
+                    </div>
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            ${badgeHtml}
+                            <h3 class="font-semibold text-gray-800 text-sm leading-tight mb-1">${product.name}</h3>
+                            <p class="text-xs text-gray-500 line-clamp-2">${product.desc}</p>
+                        </div>
+                        <div class="flex justify-between items-end mt-2">
+                            <span class="font-bold text-gray-900 text-sm">${formatRp(product.price)}</span>
+                            
+                            <div class="flex items-center space-x-2">
+                                ${qty > 0 ? `
+                                    <button onclick="updateCart('${product.id}', -1)" class="w-6 h-6 rounded-full border border-brand text-brand flex items-center justify-center hover:bg-red-50">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <span class="text-sm font-semibold w-4 text-center">${qty}</span>
+                                ` : ''}
+                                <button onclick="updateCart('${product.id}', 1)" class="w-6 h-6 rounded-full bg-brand text-white flex items-center justify-center hover:bg-red-700 shadow-sm">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        // Update Keranjang (Tambah/Kurang)
+        function updateCart(productId, change) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            if (!cart[productId]) {
+                cart[productId] = { ...product, qty: 0 };
+            }
+
+            cart[productId].qty += change;
+
+            if (cart[productId].qty <= 0) {
+                delete cart[productId];
+            }
+
+            renderProducts();
+            updateCartUI();
+        }
+
+        // Update Tampilan Bar Keranjang
+        function updateCartUI() {
+            const cartBar = document.getElementById('cart-bar');
+            let totalQty = 0;
+            let totalPrice = 0;
+
+            for (const id in cart) {
+                totalQty += cart[id].qty;
+                totalPrice += cart[id].qty * cart[id].price;
+            }
+
+            if (totalQty > 0) {
+                cartBar.classList.remove('hidden');
+                document.getElementById('cart-qty-total').innerHTML = `<i class="fas fa-shopping-basket mr-2"></i>${totalQty} Item`;
+                document.getElementById('cart-price-total').innerText = formatRp(totalPrice);
+            } else {
+                cartBar.classList.add('hidden');
+                closeCheckout(); 
+            }
+        }
+
+        // Buka Modal Checkout
+        function openCheckout() {
+            const modal = document.getElementById('checkout-modal');
+            const itemsContainer = document.getElementById('checkout-items');
+            const discountContainer = document.getElementById('checkout-discount-container');
+            
+            itemsContainer.innerHTML = '';
+            let totalPrice = 0;
+
+            for (const id in cart) {
+                const item = cart[id];
+                totalPrice += item.price * item.qty;
+                
+                itemsContainer.innerHTML += `
+                    <div class="flex justify-between items-start text-sm border-b border-gray-100 pb-2">
+                        <div class="flex-1 pr-2">
+                            <div class="font-semibold text-gray-800">${item.name}</div>
+                            <div class="text-gray-500">${formatRp(item.price)} <i class="fas fa-times text-[10px]"></i> ${item.qty}</div>
+                        </div>
+                        <div class="font-bold text-gray-900">${formatRp(item.price * item.qty)}</div>
+                    </div>
+                `;
+            }
+
+            // Render Info Diskon di Checkout
+            discountContainer.innerHTML = '';
+            if (currentDiscount > 0) {
+                discountContainer.innerHTML = `
+                    <div class="flex justify-between text-sm text-green-600 font-bold mb-3 border-t pt-2 border-gray-200">
+                        <span>Diskon (${appliedVoucher}):</span>
+                        <span>- ${formatRp(currentDiscount)}</span>
+                    </div>
+                `;
+            }
+
+            let finalPrice = totalPrice - currentDiscount;
+            if (finalPrice < 0) finalPrice = 0;
+
+            document.getElementById('checkout-total-price').innerText = formatRp(finalPrice);
+            modal.classList.remove('hidden-modal');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkout-modal').classList.add('hidden-modal');
+        }
+
+        // Logic Voucher: Hanya Mengizinkan Kode Tertentu
+        function applyVoucher() {
+            const code = document.getElementById('cust-voucher').value.trim().toUpperCase();
+            const msgEl = document.getElementById('voucher-msg');
+            currentDiscount = 0;
+            appliedVoucher = '';
+
+            if (!code) {
+                msgEl.innerText = "Silakan masukkan kode voucher.";
+                msgEl.className = "text-xs mt-1 text-red-500 block font-semibold";
+                openCheckout(); 
+                return;
+            }
+
+            // Daftar kode voucher yang valid
+            const valid5k = ['DMA00099', 'DMA00089', 'DMA00079'];
+            const valid10k = ['DMB00099', 'DMB00089', 'DMB00079'];
+
+            if (valid5k.includes(code)) {
+                currentDiscount = 5000;
+                appliedVoucher = code;
+                msgEl.innerText = `Voucher diterapkan! Diskon Rp 5.000`;
+                msgEl.className = "text-xs mt-1 text-green-600 block font-semibold";
+            } else if (valid10k.includes(code)) {
+                currentDiscount = 10000;
+                appliedVoucher = code;
+                msgEl.innerText = `Voucher diterapkan! Diskon Rp 10.000`;
+                msgEl.className = "text-xs mt-1 text-green-600 block font-semibold";
+            } else {
+                msgEl.innerText = "Kode voucher tidak valid atau tidak ditemukan.";
+                msgEl.className = "text-xs mt-1 text-red-500 block font-semibold";
+            }
+            openCheckout(); 
+        }
+
+        // Format tanggal untuk resi
+        function getFormattedDate() {
+            const now = new Date();
+            const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' };
+            return now.toLocaleDateString('id-ID', options);
+        }
+
+        // Proses Pesanan dan Buat Resi
+        function processOrder(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('cust-name').value;
+            const wa = document.getElementById('cust-wa').value;
+            const address = document.getElementById('cust-address').value;
+            const notes = document.getElementById('cust-notes').value;
+            const delivery = document.getElementById('cust-delivery').value;
+
+            // Waktu Pengiriman Logic
+            const deliveryTimeType = document.getElementById('cust-delivery-time').value;
+            let deliveryTimeText = 'Sekarang Juga';
+            if (deliveryTimeType === 'scheduled') {
+                const scheduledVal = document.getElementById('cust-scheduled-time').value;
+                if (scheduledVal) {
+                    const dt = new Date(scheduledVal);
+                    const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' };
+                    deliveryTimeText = dt.toLocaleDateString('id-ID', options);
+                }
+            }
+
+            // Generate Order ID
+            const orderId = 'UD-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+            const dateStr = getFormattedDate();
+
+            const receiptContainer = document.getElementById('receipt-content');
+            let itemsHtml = '';
+            let totalPrice = 0;
+
+            for (const id in cart) {
+                const item = cart[id];
+                const subtotal = item.price * item.qty;
+                totalPrice += subtotal;
+                
+                // Format resi per item
+                itemsHtml += `
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <div style="flex:1;">${item.name}</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; color:#555;">
+                    <div>${item.qty} x ${formatRp(item.price)}</div>
+                    <div>${formatRp(subtotal)}</div>
+                </div>`;
+            }
+
+            // HTML Diskon di dalam Resi
+            let discountResiHtml = '';
+            if (currentDiscount > 0) {
+                discountResiHtml = `
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:10px; color:green; font-weight:bold;">
+                    <div>Diskon (${appliedVoucher})</div>
+                    <div>- ${formatRp(currentDiscount)}</div>
+                </div>`;
+            }
+
+            let finalPrice = totalPrice - currentDiscount;
+            if (finalPrice < 0) finalPrice = 0;
+
+            receiptContainer.innerHTML = `
+            <div style="text-align:center; margin-bottom:15px;">
+                <img src="images/logo-ummyah.png" alt="Logo" style="width:50px; height:50px; border-radius:50%; margin:0 auto 10px auto; display:block; border:1px solid #ccc; object-fit:contain; background:#fff;">
+                <h2 style="margin:0; font-size:18px; font-weight:bold;">UMMYAH DIMSUM</h2>
+                <div style="font-size:12px;">Premium Dimsum Mentai</div>
+                <div style="font-size:12px;">Makassar</div>
+            </div>
+            <div style="border-bottom:1px dashed #000; margin-bottom:10px;"></div>
+            <div style="font-size:12px; margin-bottom:10px;">
+                <div>No Pesanan : ${orderId}</div>
+                <div>Tanggal    : ${dateStr}</div>
+                <div>Kasir      : Online (Web)</div>
+            </div>
+            <div style="border-bottom:1px dashed #000; margin-bottom:10px;"></div>
+            <div style="font-size:12px; margin-bottom:10px;">
+                ${itemsHtml}
+            </div>
+            ${discountResiHtml}
+            <div style="border-bottom:1px dashed #000; margin-bottom:10px;"></div>
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:14px; margin-bottom:15px;">
+                <div>TOTAL</div>
+                <div>${formatRp(finalPrice)}</div>
+            </div>
+            <div style="border-bottom:1px dashed #000; margin-bottom:10px;"></div>
+            <div style="font-size:12px; margin-bottom:15px;">
+                <strong>Detail Pelanggan:</strong><br>
+                Nama: ${name}<br>
+                WA: ${wa}<br>
+                Alamat: ${address}<br>
+                Waktu Kirim: ${deliveryTimeText}<br>
+                Pengiriman: ${delivery}<br>
+                ${notes ? `Catatan: ${notes}` : ''}
+            </div>
+            <div style="text-align:center; font-size:12px;">
+                *Biaya ongkir akan dikonfirmasi via WhatsApp<br><br>
+                Terima Kasih atas Pesanan Anda!<br>
+                <i class="fas fa-heart" style="color:red; margin-top:5px;"></i> Halal dan Lezat
+            </div>
+            `;
+
+            closeCheckout();
+            document.getElementById('receipt-modal').classList.remove('hidden-modal');
+        }
+
+        function closeReceipt() {
+            document.getElementById('receipt-modal').classList.add('hidden-modal');
+        }
+
+        // Download Resi menggunakan html2canvas dengan teknik Clone (Fix Resi Terpotong)
+        function downloadReceipt() {
+            const receiptElement = document.getElementById('receipt-content');
+            
+            const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
+            btn.disabled = true;
+
+            // Membuat clone elemen resi lalu ditempatkan di luar layar (body)
+            // Tujuannya agar html2canvas merender ukurannya secara "full" tanpa terpotong oleh overflow pada modal
+            const clone = receiptElement.cloneNode(true);
+            clone.style.position = 'absolute';
+            clone.style.top = '-9999px';
+            clone.style.left = '-9999px';
+            clone.style.width = receiptElement.offsetWidth + 'px'; // Kunci ukuran lebar aslinya
+            document.body.appendChild(clone);
+
+            html2canvas(clone, {
+                scale: 2, 
+                backgroundColor: "#ffffff",
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Resi_Ummyah_Dimsum_${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                // Cleanup dan mengembalikan tombol ke keadaan semula
+                document.body.removeChild(clone);
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error("Gagal membuat gambar resi: ", err);
+                document.body.removeChild(clone);
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            });
+        }
+
+        // Kirim Pesanan ke WhatsApp
+        function sendWhatsApp() {
+            const name = document.getElementById('cust-name').value;
+            const address = document.getElementById('cust-address').value;
+            const notes = document.getElementById('cust-notes').value;
+            const delivery = document.getElementById('cust-delivery').value;
+
+            // Waktu Pengiriman Logic
+            const deliveryTimeType = document.getElementById('cust-delivery-time').value;
+            let deliveryTimeText = 'Sekarang Juga';
+            if (deliveryTimeType === 'scheduled') {
+                const scheduledVal = document.getElementById('cust-scheduled-time').value;
+                if (scheduledVal) {
+                    const dt = new Date(scheduledVal);
+                    const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' };
+                    deliveryTimeText = dt.toLocaleDateString('id-ID', options);
+                }
+            }
+
+            let waText = `*PESANAN UMMYAH DIMSUM*%0A%0A`;
+            waText += `*Nama:* ${name}%0A`;
+            waText += `*Alamat:* ${address}%0A`;
+            waText += `*Waktu Kirim:* ${deliveryTimeText}%0A`;
+            waText += `*Pengiriman:* ${delivery}%0A`;
+            if (notes) waText += `*Catatan:* ${notes}%0A`;
+            waText += `%0A*Detail Pesanan:*%0A`;
+
+            let totalPrice = 0;
+            for (const id in cart) {
+                const item = cart[id];
+                totalPrice += item.price * item.qty;
+                waText += `- ${item.qty}x ${item.name} (${formatRp(item.price * item.qty)})%0A`;
+            }
+
+            if (currentDiscount > 0) {
+                waText += `*Diskon (${appliedVoucher}): -${formatRp(currentDiscount)}*%0A`;
+            }
+
+            let finalPrice = totalPrice - currentDiscount;
+            if (finalPrice < 0) finalPrice = 0;
+
+            waText += `%0A*TOTAL: ${formatRp(finalPrice)}*%0A`;
+            waText += `*(Belum termasuk ongkir)*%0A%0A`;
+            waText += `Tolong segera diproses dan mohon konfirmasi total tagihan beserta ongkirnya ya, Kak. Terima kasih!`;
+
+            const waUrl = `https://wa.me/${ADMIN_WA}?text=${waText}`;
+            window.open(waUrl, '_blank');
+        }
+
+        // Logic Modal Chat WA Mengambang
+        function openWaModal() {
+            document.getElementById('wa-modal').classList.remove('hidden-modal');
+        }
+
+        function closeWaModal() {
+            document.getElementById('wa-modal').classList.add('hidden-modal');
+        }
+
+        function sendDirectWa() {
+            const msg = document.getElementById('wa-message').value;
+            let text = "Halo Ummyah Dimsum, saya mau bertanya...";
+            if (msg.trim() !== '') {
+                text = msg;
+            }
+            const waUrl = `https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+            closeWaModal();
+            document.getElementById('wa-message').value = ''; // clear msg
+        }
+
+        // Logic toggle input jadwal pengiriman
+        function toggleScheduledTime() {
+            const type = document.getElementById('cust-delivery-time').value;
+            const container = document.getElementById('scheduled-time-container');
+            const input = document.getElementById('cust-scheduled-time');
+            if (type === 'scheduled') {
+                container.classList.remove('hidden');
+                input.required = true;
+            } else {
+                container.classList.add('hidden');
+                input.required = false;
+                input.value = '';
+            }
+        }
+
+        // Logic Modal Preview Gambar
+        function openImageModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.image) return;
+            
+            document.getElementById('preview-image').src = product.image;
+            document.getElementById('preview-title').innerText = product.name;
+            document.getElementById('image-modal').classList.remove('hidden-modal');
+        }
+
+        // Fungsi baru untuk modal gambar dari sumber langsung (testimoni)
+        function openImageModalBySrc(src, title) {
+            document.getElementById('preview-image').src = src;
+            document.getElementById('preview-title').innerText = title || 'Foto Testimoni';
+            document.getElementById('image-modal').classList.remove('hidden-modal');
+        }
+
+        function closeImageModal() {
+            document.getElementById('image-modal').classList.add('hidden-modal');
+        }
+
+        // --- Fitur Testimoni (Integrasi Spreadsheet) ---
+        let selectedRating = 0;
+        
+        // URL Web App dari Google Apps Script Anda 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbywrC-bs7W1jfcGT4Vewy0QN-_uMnPBkedNtXt4oLA4k_zQ5-kFIyS_L8EAseV9xxQ/exec"; 
+
+        // --- Testimoni Asli Pelanggan ---
+        // sumber 'wa' = chat WhatsApp (nama dirahasiakan), 'ig' = Instagram Story (username pengunggah dicantumkan)
+        // unggulan: true = tampil di baris depan; sisanya ada di "Lihat Semua Testimoni"
+        const UP = 'images/';
+        const TESTIMONI_ASLI = [
+            { sumber: 'ig', nama: '_nesya.ya', rating: 5, ulasan: "Maa syaa allah tabarakallah, dimsum terenak yang pernah aku makan di Makassar, rate dari aku 1000/10 🤩\nPesannya di kak @raihaanahr 😍", foto: UP + 'ig-15.jpg', unggulan: true },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Mau kasi testiii... Semalam rebutan sama saudara karena ini dimsum terenak yang pernah kami beli, MaasyaaAllah... Apalagi chili oilnya.. d best.... Sukses terus dan larisss selaluu umyahhh 🤞\n\nDefinisi dimsum premium. Porsinya mantap, mentainya melimpah, dan teksturnya juara. Apalg ada di chili oil-nya yang punya rasa otentik dan bikin ketagihan. Quality and taste are top notch 🤞 super nagih dimsumnya. 100/10 must try!", foto: UP + 'testi-08.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'mftymwd', rating: 5, ulasan: "Maa syaa allah, finally order dimsum ummyah 🥰🫶\nKulit dimsumnya lembut & tipis, isiannya padat melimpah ✨😋\nNext bakal order lagi, in syaa allah 😍💖", foto: UP + 'ig-18.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'nurhidayahisna2', rating: 5, ulasan: "First time makan ginian, takut gak cocok di lidah. Daan.. maa Syaa Allah, Wenakk.. Kurangnya satu aja, kurang banyak belinya. 😆\nBelinya di kak Rain Umma Yahya", foto: UP + 'ig-16.jpg', unggulan: true },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "MasyaaAllah sukaa dan enak enakk skali dimsumntaa, aplgi chili oilnyaa juara mmng ⭐⭐⭐⭐⭐ beda skli sm dimsum yg pernah ku cba, ndd kalah pokonya masyaaAllah. Packagingnya jga steril dan aman skali 😍👍🤤🤤", foto: UP + 'testi-04.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'nptriinabilaa', rating: 5, ulasan: "10/10 sih 😍 Ma sya Allah dimsum terenak sih yg ini, selama ini susah cri yang enak dan harga nya terjangkau skli 🥰🤍\nJangan lupa kalau mau ki pesan bisa DM ig nya kak @raihaanahr", foto: UP + 'ig-20.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'faathimahsandi_', rating: 5, ulasan: "Dimsum umyah mendarat dengan nikmat di Madinah 🥹🤍\nJazaakillahu khayran kak @raihaanahr, maap baru upload, hp nya baru nyala 🙏😅", foto: UP + 'ig-14.jpg', unggulan: true },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Kaakk, dimsumta sampai di kampungku. Masya Allah hampir 24 jam perjalanan dan masih enak rasanya.\nDimsum gorengnya kugoreng lagi biar tambah garing dan hangat2 krn lamami dijalan, enak sekali kak, kejunya juga lumer, tadi subuh kumakan sahur dan masih enak.\nDimsum gorengta lewatmi 24 jam, pdhal ndk dikulkas ji kusimpan pas sampe rumah. Sahurpi tdi baru habis. Dan ternyata sebesar itu dimsum gorengta, masya Allah 😍", foto: UP + 'testi-11.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'dwinurskd', rating: 5, ulasan: "Mentai cheese, besttt 🫶\nOrdernya di sini @raihaanahr ✨", foto: UP + 'ig-21.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'machaalattvee', rating: 5, ulasan: "Enak skali!! Dimsumnya meaty, chili oilnya jg enak.. overall trasa skali premiumnyaaa 😋🫶\n— Dimsum Mentai Cheese", foto: UP + 'ig-25.jpg', unggulan: true },
+            { sumber: 'ig', nama: 'fatimahacca', rating: 5, ulasan: "Nemenin aktivitas ngedit ku di weekend ini, kalo lagi mumet.. makan ini auto happy lagii 🤏❤️\nJazakillahu khairan ustazaah @raihaanahr 🫶", foto: UP + 'ig-26.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Makasiii kakk, baru saya coba dimsum taa enakk sekaliiii. Isinya padat dan toppingnya melimpahki, chili oilnya jugaa enaakkkk skliii 🤩🤍", foto: UP + 'testi-13.jpg' },
+            { sumber: 'ig', nama: 'fildzahnblh', rating: 5, ulasan: "Best dimsum in town. 100/10 💯⭐ @ummyah.dimsum", foto: UP + 'ig-36.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Kakk terima kasihh, Masya Allah enakk sekalii dimsumnyaa, saus mentainya jugaa eenaaakk sekaliii 🥹", foto: UP + 'testi-07.jpg' },
+            { sumber: 'ig', nama: 'muaffiqah_', rating: 5, ulasan: "Masyaa Allah endul tawwa. Lumer2 mentai sama cheesenya di mulut 🤤 @raihaanahr", foto: UP + 'ig-31.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Datang mi kak 📦\nMaa syaa Allah enaaaaaaaaaaaak, terbayarkan penungguan panjang 💖👌", foto: UP + 'testi-03.jpg' },
+            { sumber: 'ig', nama: 'nrainislmn', rating: 5, ulasan: "Mentai cheese delight & original 😍😍😍\nPesan Rabu, 22 Oktober 2025 – post Rabu, 5 November 2025 (setelah 2 pekan wkwk)\nOrder in @ummyah.dimsum", foto: UP + 'ig-33.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Syukran kak enak sekali dimsumnya, packagingnya jg bagus sekali, barakallah 🥰🙏", foto: UP + 'testi-12.jpg' },
+            { sumber: 'ig', nama: 'rima_andriani', rating: 5, ulasan: "Allahumma baarik lahum fii maa razaqtahum, waghfir lahum, warhamhum 🤲\nMaacih repot-repot dikirim malam-malam 💙 @ummyah.dimsum Enaaak ☺️☺️☺️", foto: UP + 'ig-42.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Sampaimii alhamdulillaah, syukroon yaah 🌹🌹\nMasyaAllah, enaakk sekaliii 😘😘\nBarakallahu fiik Ummyah dimsum.. Syukron telah membahagiakan perut ini 😂🤭😘😘😘", foto: UP + 'testi-05.jpg' },
+            { sumber: 'ig', nama: 'usepalsepil', rating: 5, ulasan: "Dimsum yg ke xxx pernah kucoba, ini juicy sekali 🙏🥹💞\nSyukron kk luphhh @ummyah.dimsum @raihaanahr", foto: UP + 'ig-46.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Sudah sampai kak, masyaallah enak sekali 🥹🫶", foto: UP + 'testi-09.jpg' },
+            { sumber: 'ig', nama: 'sitiwakiyah.s', rating: 5, ulasan: "Ayo jajan UMMYAH.DIMSUM! 10/10 ukuran dan rasanya super premium.\nBelajar boleh serius, tapi dimsum dulu biar fokus. 📚", foto: UP + 'ig-41.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Alhamdulillah sudah tiba kak, syukran, enak dan bersih as always 🥰🫶", foto: UP + 'testi-01.jpg' },
+            { sumber: 'ig', nama: 'aisyah_hidayatt14', rating: 5, ulasan: "@ummyah.dimsum 1000/10 💗", foto: UP + 'ig-24.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Makasihh kakk. Enakk sekalii. Beda dri yg lain. Whlist ku klw ke Mkssr pngn cba dimsum ta. Ndk sempt mi sy fto pas smpe lngsung di eksekusii 😄", foto: UP + 'testi-06.jpg' },
+            { sumber: 'ig', nama: 'dwinurskd', rating: 5, ulasan: "Selalu enakkk 😌🥹☺️ @ummyah.dimsum", foto: UP + 'ig-39.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Alhamdulillah na ***** semua orang 🥹🫶\nEnaknya.. MasyaAllah 🥹🥰", foto: UP + 'testi-10.jpg' },
+            { sumber: 'ig', nama: 'zhaifahzb', rating: 5, ulasan: "Masya Allah cemilan lezat malam ini @ummyah.dimsum ✨", foto: UP + 'ig-40.jpg' },
+            { sumber: 'wa', nama: '*********', rating: 5, ulasan: "Enakk sekalii dimsum nyaa 😻😻", foto: UP + 'testi-02.jpg' },
+            { sumber: 'ig', nama: 'zahratlljnnh_', rating: 5, ulasan: "Dimsumnya enak, recommended ❤️ 100/10 ⭐\nOrder disini @ummyah.dimsum", foto: UP + 'ig-44.jpg' },
+            { sumber: 'ig', nama: 'fatimah_nkhair', rating: 5, ulasan: "Fav musmid by @ummyah.dimsum 😋🫶", foto: UP + 'ig-17.jpg' },
+            { sumber: 'ig', nama: 'lutfiahfe', rating: 5, ulasan: "Jd saksi klo membujukka mau dimsumnya ustadzah sambil bisik2 tetangga, ehh dikasi dongg, rezeki nda kemana ges 🤭🫶\nButt must to try sih, sedaging itu 😋 @ummyah.dimsum", foto: UP + 'ig-45.jpg' },
+            { sumber: 'ig', nama: 'ainun_afiat21', rating: 5, ulasan: "Menu malam ini dimsum made by @ummyah.dimsum, ga pernah gagal soal rasa dan kualitas ✨", foto: UP + 'ig-34.jpg' },
+            { sumber: 'ig', nama: 'zahrah.nb', rating: 5, ulasan: "Kalo ke Makassar, belinya disini @ummyah.dimsum", foto: UP + 'ig-32.jpg' },
+            { sumber: 'ig', nama: 'naskaptr', rating: 5, ulasan: "Nge-dimsum @ummyah.dimsum 🥢", foto: UP + 'ig-35.jpg' },
+            { sumber: 'ig', nama: 'fatimahacca', rating: 5, ulasan: "✨ Bersama orang-orang hebatnya Erha 🧡\nDimsum custom “Cemilan sayang buat PI-KABIDAH tercinta”", foto: UP + 'ig-30.jpg' },
+            { sumber: 'ig', nama: 'tiyaasyhrr', rating: 5, ulasan: "Dimsum terenakk by @ummyah.dimsum 🤤✨", foto: UP + 'ig-43.jpg' },
+            { sumber: 'ig', nama: 'nahdnursyam', rating: 5, ulasan: "Dimsum kesukaan sekeluarga, masyaaAllah si kecil pun doyan xixi @ummyah.dimsum barakallahufiik kak @raihaanahr ❤️\nAnak kecil tolong sabar dulu ksian 👈", foto: UP + 'ig-23.jpg' },
+            { sumber: 'ig', nama: 'astrid_hrmwan', rating: 5, ulasan: "Dimsumnya pakai tobiko jadi beda dri dimsum yg lain 😍\nBeli di @ummyah.dimsum", foto: UP + 'ig-27.jpg' },
+            { sumber: 'ig', nama: 'astrid_hrmwan', rating: 5, ulasan: "Semangat kerja proposalnya, full support... 😍✨ @ummyah.dimsum", foto: UP + 'ig-37.jpg' },
+            { sumber: 'ig', nama: 'khaulahramli__', rating: 5, ulasan: "Dimsum time 🥢 @ummyah.dimsum @raihaanahr", foto: UP + 'ig-22.jpg' },
+            { sumber: 'ig', nama: 'hayaswr', rating: 5, ulasan: "Dimsum enak 🥢🥰 by @raihaanahr", foto: UP + 'ig-19.jpg' },
+            { sumber: 'ig', nama: 'nadyanrazzh', rating: 5, ulasan: "Repeat order lagi @ummyah.dimsum @raihaanahr 🫶", foto: UP + 'ig-28.jpg' },
+            { sumber: 'ig', nama: 'rayhaanah.b', rating: 5, ulasan: "@ummyah.dimsum @raihaanahr ❤️👌", foto: UP + 'ig-29.jpg' },
+            { sumber: 'ig', nama: 'amirullahsyaifuddin_asy', rating: 5, ulasan: "Alhamdulillah silaturahmi 😊 disponsori oleh @ummyah.dimsum", foto: UP + 'ig-38.jpg' },
+        ];
+
+        const BATAS_TESTIMONI_DRAFT = new Date('2026-11-09T00:00:00Z'); // isian spreadsheet sebelum tanggal ini = draft/uji coba
+        const ULASAN_WEB = []; // ulasan baru dari form "Tulis Ulasan" (spreadsheet)
+        let filterTestimoni = 'semua';
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function buatKartuTestimoni(item, diBaris) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col' + (diBaris ? ' min-w-[240px] max-w-[240px] flex-shrink-0 snap-start' : '');
+            const isWa = item.sumber === 'wa', isIg = item.sumber === 'ig';
+            const badge = isIg
+                ? '<span class="absolute top-2 left-2 text-[10px] font-semibold text-white px-2 py-0.5 rounded-full shadow" style="background:linear-gradient(45deg,#f09433,#dc2743,#bc1888)"><i class="fab fa-instagram mr-1"></i>Instagram</span>'
+                : (isWa
+                    ? '<span class="absolute top-2 left-2 text-[10px] font-semibold text-white bg-green-500 px-2 py-0.5 rounded-full shadow"><i class="fab fa-whatsapp mr-1"></i>WhatsApp</span>'
+                    : '<span class="absolute top-2 left-2 text-[10px] font-semibold text-white bg-brand px-2 py-0.5 rounded-full shadow"><i class="fas fa-globe mr-1"></i>Ulasan Web</span>');
+            let stars = '';
+            const rating = parseInt(item.rating) || 5;
+            for (let i = 0; i < 5; i++) stars += i < rating ? '<i class="fas fa-star"></i>' : '<i class="fas fa-star text-gray-200"></i>';
+            const ada = item.foto && String(item.foto).trim() !== '';
+            const fotoHtml = ada
+                ? '<div class="relative cursor-pointer ' + (isWa ? 'bg-[#efeae2]' : 'bg-gray-100') + '" onclick="openImageModalBySrc(this.querySelector(\'img\').src, \'Testimoni Pelanggan\')" title="Ketuk untuk memperbesar">'
+                    + '<img src="' + item.foto + '" alt="Foto testimoni" loading="lazy" class="w-full h-44 ' + (isWa ? 'object-contain p-2' : 'object-cover') + '">'
+                    + badge + '</div>'
+                : '<div class="relative h-9">' + badge + '</div>';
+            const sumberHtml = isIg
+                ? '<a href="https://www.instagram.com/' + item.nama + '/" target="_blank" rel="noopener" class="text-pink-600 hover:underline"><i class="fab fa-instagram mr-1"></i>@' + item.nama + '</a>'
+                : '<span class="text-gray-500 tracking-wider">' + escapeHtml(item.nama) + '</span>';
+            card.innerHTML = fotoHtml
+                + '<div class="p-3 flex flex-col flex-1">'
+                + '<div class="flex text-yellow-400 text-[11px] gap-0.5">' + stars + '</div>'
+                + '<p class="text-xs text-gray-700 mt-1.5 line-clamp-4 whitespace-pre-line cursor-pointer" onclick="this.classList.toggle(\'line-clamp-4\')" title="Ketuk untuk baca selengkapnya">' + escapeHtml(item.ulasan) + '</p>'
+                + '<div class="mt-auto pt-2 text-[11px] font-semibold truncate">' + sumberHtml + '</div>'
+                + '</div>';
+            return card;
+        }
+
+        function renderTestimoniAsli() {
+            const list = document.getElementById('testimonial-list');
+            TESTIMONI_ASLI.filter(t => t.unggulan).forEach(t => list.appendChild(buatKartuTestimoni(t, true)));
+            const more = document.createElement('button');
+            more.className = 'min-w-[150px] flex-shrink-0 snap-start rounded-2xl border-2 border-dashed border-red-200 bg-white text-brand font-semibold text-sm flex flex-col items-center justify-center gap-3 hover:bg-red-50 transition';
+            more.onclick = openSemuaTestimoni;
+            more.innerHTML = '<span class="w-12 h-12 rounded-full bg-brand text-white flex items-center justify-center shadow-md"><i class="fas fa-arrow-right"></i></span><span>Lihat Semua<br>Testimoni</span>';
+            list.appendChild(more);
+            updateJumlahTestimoni();
+            list.addEventListener('scroll', updatePanahTestimoni);
+            window.addEventListener('resize', updatePanahTestimoni);
+            setTimeout(updatePanahTestimoni, 300);
+        }
+
+        function updateJumlahTestimoni() {
+            const el = document.getElementById('testi-count');
+            if (el) el.textContent = TESTIMONI_ASLI.length + ULASAN_WEB.length;
+        }
+
+        function scrollTestimoni(arah) {
+            const list = document.getElementById('testimonial-list');
+            list.scrollBy({ left: arah * Math.round(list.clientWidth * 0.8), behavior: 'smooth' });
+        }
+
+        function updatePanahTestimoni() {
+            const list = document.getElementById('testimonial-list');
+            const prev = document.getElementById('testi-prev'), next = document.getElementById('testi-next');
+            if (!list || !prev || !next) return;
+            prev.classList.toggle('hidden', list.scrollLeft <= 5);
+            next.classList.toggle('hidden', list.scrollLeft + list.clientWidth >= list.scrollWidth - 5);
+        }
+
+        function openSemuaTestimoni() {
+            document.getElementById('semua-testimoni-modal').classList.remove('hidden-modal');
+            document.body.style.overflow = 'hidden';
+            renderSemuaTestimoni();
+        }
+
+        function closeSemuaTestimoni() {
+            document.getElementById('semua-testimoni-modal').classList.add('hidden-modal');
+            document.body.style.overflow = '';
+        }
+
+        function setFilterTestimoni(f) {
+            filterTestimoni = f;
+            renderSemuaTestimoni();
+            document.getElementById('semua-testimoni-grid').parentElement.scrollTop = 0;
+        }
+
+        function renderSemuaTestimoni() {
+            const grid = document.getElementById('semua-testimoni-grid');
+            const semua = ULASAN_WEB.map(u => ({ sumber: 'web', nama: u.nama, ulasan: u.ulasan, foto: u.foto, rating: u.rating })).concat(TESTIMONI_ASLI);
+            grid.innerHTML = '';
+            semua.filter(t => filterTestimoni === 'semua' || t.sumber === filterTestimoni).forEach(t => grid.appendChild(buatKartuTestimoni(t, false)));
+            document.querySelectorAll('[data-filter-testi]').forEach(b => {
+                const aktif = b.getAttribute('data-filter-testi') === filterTestimoni;
+                b.className = 'px-3 py-1.5 rounded-full text-xs font-semibold border transition ' + (aktif ? 'bg-brand text-white border-brand' : 'bg-white text-gray-600 border-gray-200 hover:border-red-300');
+            });
+            const jumlah = { semua: semua.length, wa: semua.filter(t => t.sumber === 'wa').length, ig: semua.filter(t => t.sumber === 'ig').length };
+            Object.keys(jumlah).forEach(k => { const el = document.getElementById('testi-count-' + k); if (el) el.textContent = jumlah[k]; });
+        }
+
+        function fetchTestimoni() {
+            fetch(SCRIPT_URL)
+                .then(response => response.json())
+                .then(data => {
+                    const list = document.getElementById('testimonial-list');
+                    
+                    data.forEach(item => {
+                        // Lewati baris jika data nama kosong
+                        if (!item.nama) return;
+                    // Sembunyikan testimoni draft/uji coba lama
+                    if (item.waktu && new Date(item.waktu) < BATAS_TESTIMONI_DRAFT) return;
+                    ULASAN_WEB.push(item);
+                    updateJumlahTestimoni(); 
+
+                        let starsHtml = '';
+                        let rating = parseInt(item.rating) || 5;
+                        for(let i=0; i<5; i++) {
+                            starsHtml += i < rating ? '<i class="fas fa-star"></i>' : '<i class="fas fa-star text-gray-200"></i>';
+                        }
+
+                        let imgHtml = '';
+                        if (item.foto && item.foto.trim() !== '') {
+                            imgHtml = `<img src="${item.foto}" class="w-full h-28 object-cover rounded-lg mt-2 border shadow-sm cursor-pointer" onclick="openImageModalBySrc('${item.foto}', 'Foto Testimoni: ${item.nama}')" title="Klik untuk memperbesar">`;
+                        }
+
+                        const newTesti = document.createElement('div');
+                        newTesti.className = 'bg-white p-4 rounded-xl shadow-sm border border-gray-100 min-w-[260px] max-w-[260px] flex-shrink-0 transition animate-slide-up';
+                        newTesti.innerHTML = `
+                            <div class="flex text-yellow-400 text-xs mb-2">${starsHtml}</div>
+                            <h4 class="font-bold text-sm text-gray-800">${item.nama}</h4>
+                            <p class="text-xs text-gray-600 mt-1 line-clamp-3">${item.ulasan}</p>
+                            ${imgHtml}
+                        `;
+                        
+                        // Menambahkan testimoni dari spreadsheet ke bagian paling awal
+                        list.insertBefore(newTesti, list.firstChild);
+                    });
+                })
+                .catch(error => console.error("Gagal memuat testimoni:", error));
+        }
+
+        function openTestimoniModal() {
+            document.getElementById('testimoni-modal').classList.remove('hidden-modal');
+            document.getElementById('testi-error-msg').classList.add('hidden');
+            setRating(0); // reset rating
+            document.getElementById('testimoni-form').reset();
+            removeTestiImage(); // Bersihkan foto saat dibuka
+        }
+
+        function closeTestimoniModal() {
+            document.getElementById('testimoni-modal').classList.add('hidden-modal');
+        }
+
+        // Logika untuk upload dan kompresi foto
+        function previewTestiImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Kompres gambar menjadi 400px (agar tidak berat saat dikirim ke spreadsheet)
+                    compressImage(e.target.result, 400, function(compressedBase64) {
+                        document.getElementById('testi-image-base64').value = compressedBase64;
+                        document.getElementById('testi-img-preview').src = compressedBase64;
+                        document.getElementById('testi-img-preview-container').classList.remove('hidden');
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeTestiImage() {
+            document.getElementById('testi-image').value = '';
+            document.getElementById('testi-image-base64').value = '';
+            document.getElementById('testi-img-preview-container').classList.add('hidden');
+        }
+
+        // Fungsi kompresi gambar menggunakan Canvas
+        function compressImage(base64Str, maxWidth, callback) {
+            let img = new Image();
+            img.src = base64Str;
+            img.onload = function() {
+                let canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                if (width > maxWidth) {
+                    height = Math.round(height * (maxWidth / width));
+                    width = maxWidth;
+                }
+                canvas.width = width;
+                canvas.height = height;
+                let ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                // Kompres format jadi JPEG dan kualitas 60%
+                callback(canvas.toDataURL('image/jpeg', 0.6));
+            };
+        }
+
+        function setRating(rating) {
+            selectedRating = rating;
+            document.getElementById('testi-rating').value = rating;
+            const msg = document.getElementById('testi-error-msg');
+            msg.classList.add('hidden'); // Sembunyikan error jika sudah klik bintang
+
+            const stars = document.getElementById('star-rating-container').children;
+            for (let i = 0; i < stars.length; i++) {
+                if (i < rating) {
+                    stars[i].classList.remove('text-gray-200');
+                    stars[i].classList.add('text-yellow-400');
+                } else {
+                    stars[i].classList.add('text-gray-200');
+                    stars[i].classList.remove('text-yellow-400');
+                }
+            }
+        }
+
+        function submitTestimoni(e) {
+            e.preventDefault();
+            
+            const msgEl = document.getElementById('testi-error-msg');
+            if (selectedRating === 0) {
+                msgEl.classList.remove('hidden');
+                msgEl.innerText = "Silakan berikan rating bintang terlebih dahulu.";
+                return;
+            }
+
+            const name = document.getElementById('testi-name').value;
+            const desc = document.getElementById('testi-desc').value;
+            const base64Img = document.getElementById('testi-image-base64').value; // Mengambil foto
+            const btn = document.getElementById('btn-submit-testi');
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim Data...';
+            btn.disabled = true;
+            btn.classList.add('opacity-70');
+
+            const formData = new FormData();
+            formData.append('nama', name);
+            formData.append('rating', selectedRating);
+            formData.append('ulasan', desc);
+            formData.append('foto', base64Img); // Kirim foto ke script
+
+            // Fetch ke Google Script menggunakan mode no-cors
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors' 
+            }).then(() => {
+                // Tampilkan testimoni baru secara instan di layar
+                const list = document.getElementById('testimonial-list');
+                
+                let starsHtml = '';
+                for(let i=0; i<5; i++) {
+                    starsHtml += i < selectedRating ? '<i class="fas fa-star"></i>' : '<i class="fas fa-star text-gray-200"></i>';
+                }
+
+                // Render gambar di elemen testimoni jika ada foto
+                let imgHtml = '';
+                if (base64Img) {
+                    imgHtml = `<img src="${base64Img}" class="w-full h-28 object-cover rounded-lg mt-2 border shadow-sm cursor-pointer" onclick="openImageModalBySrc('${base64Img}', 'Foto Testimoni: ${name}')" title="Klik untuk memperbesar">`;
+                }
+
+                const newTesti = document.createElement('div');
+                newTesti.className = 'bg-red-50 p-4 rounded-xl shadow-sm border border-brand min-w-[260px] max-w-[260px] flex-shrink-0 transition animate-slide-up';
+                newTesti.innerHTML = `
+                    <div class="flex text-yellow-400 text-xs mb-2">${starsHtml}</div>
+                    <h4 class="font-bold text-sm text-gray-800">${name} <span class="text-[10px] bg-brand text-white px-1.5 py-0.5 rounded ml-1 rounded-full"><i class="fas fa-check"></i> Baru</span></h4>
+                    <p class="text-xs text-gray-600 mt-1 line-clamp-3">${desc}</p>
+                    ${imgHtml}
+                `;
+                
+                // Masukkan di paling awal (kiri)
+                list.insertBefore(newTesti, list.firstChild);
+
+                // Ubah tombol jadi notifikasi sukses
+                btn.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Berhasil Dikirim!';
+                btn.classList.remove('bg-brand', 'hover:bg-red-700', 'opacity-70');
+                btn.classList.add('bg-[#25D366]', 'hover:bg-green-600'); // Warna hijau
+                
+                setTimeout(() => {
+                    closeTestimoniModal();
+                    // Kembalikan tombol ke kondisi semula setelah tertutup
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Ulasan';
+                        btn.classList.add('bg-brand', 'hover:bg-red-700');
+                        btn.classList.remove('bg-[#25D366]', 'hover:bg-green-600');
+                        btn.disabled = false;
+                    }, 500);
+                }, 2000); // Tutup otomatis dalam 2 detik
+                
+            }).catch(error => {
+                msgEl.classList.remove('hidden');
+                msgEl.innerText = "Terjadi kesalahan koneksi. Mohon coba lagi.";
+                btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Ulasan';
+                btn.disabled = false;
+                btn.classList.remove('opacity-70');
+            });
+        }
+
+        // Inisialisasi awal
+        window.onload = () => {
+            renderProducts();
+            renderTestimoniAsli();
+            fetchTestimoni();
+        };
+
+    </script>
+</body>
+</html>
